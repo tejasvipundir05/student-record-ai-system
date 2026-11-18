@@ -294,6 +294,53 @@ void sortByName() {
     displayAllStudents();
 }
 
+/* AI-Assisted Academic Advisor */
+void academicAdvisor() {
+    long long id;
+
+    printf("\nEnter Student SAP ID: ");
+
+    if (scanf("%lld", &id) != 1) {
+        printf("Invalid SAP ID.\n");
+        return;
+    }
+
+    int index = findStudent(id);
+
+    if (index == -1) {
+        printf("Student not found.\n");
+        return;
+    }
+
+    float cgpa = calculateCGPA(students[index]);
+
+    if (cgpa < 0) {
+        printf("No SGPA data available for advice.\n");
+        return;
+    }
+
+    printf("\n===== AI ACADEMIC ADVISOR =====\n");
+    printf("Student: %s\n", students[index].name);
+    printf("CGPA: %.2f\n", cgpa);
+
+    if (cgpa >= 9.0) {
+        printf("Excellent Performance!\n");
+        printf("Maintain your study pattern and explore advanced topics.\n");
+    }
+    else if (cgpa >= 7.0) {
+        printf("Good Performance!\n");
+        printf("Keep practicing and aim for higher grades.\n");
+    }
+    else if (cgpa >= 5.0) {
+        printf("Needs Improvement!\n");
+        printf("Focus on weaker subjects and revise regularly.\n");
+    }
+    else {
+        printf("Requires Immediate Attention!\n");
+        printf("Seek faculty guidance and prepare a study plan.\n");
+    }
+}
+
 /* Main menu */
 void displayMenu() {
     printf("\n====================================\n");
@@ -357,8 +404,8 @@ int main() {
         break;
 
     case 9:
-        printf("AI Advisor coming soon!\n");
-        break;
+    academicAdvisor();
+    break;
 
     case 0:
         printf("Thank you! Goodbye.\n");
