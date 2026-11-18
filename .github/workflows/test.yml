@@ -20,3 +20,21 @@ jobs:
           printf '0\n' | ./student_system > output.txt
           grep -q "STUDENT RECORD MANAGEMENT SYSTEM" output.txt
           grep -q "Goodbye" output.txt
+      - name: Test five students and AI Advisor
+        run: |
+          ./student_system < tests/sample_input.txt > sample_output.txt
+          grep -q "Student added successfully" sample_output.txt
+          grep -q "CGPA: 9.50" sample_output.txt
+          grep -q "Excellent Performance" sample_output.txt
+          grep -q "Good Performance" sample_output.txt
+          grep -q "Needs Improvement" sample_output.txt
+          grep -q "Requires Immediate Attention" sample_output.txt
+          grep -q "Student deleted successfully" sample_output.txt
+
+      - name: Upload sample output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: student-test-output
+          path: sample_output.txt
+          if-no-files-found: warn
