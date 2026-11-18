@@ -1,0 +1,22 @@
+name: Test C Student Management Project
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile C program
+        run: gcc -std=c11 -Wall -Wextra 590037087.c -o student_system
+
+      - name: Run basic menu test
+        run: |
+          printf '0\n' | ./student_system > output.txt
+          grep -q "STUDENT RECORD MANAGEMENT SYSTEM" output.txt
+          grep -q "Goodbye" output.txt
