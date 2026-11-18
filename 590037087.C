@@ -184,6 +184,116 @@ void deleteStudent() {
     printf("Student deleted successfully!\n");
 }
 
+/* Calculate CGPA from available SGPA values */
+float calculateCGPA(struct Student s) {
+    float total = 0;
+    int count = 0;
+
+    for (int i = 0; i < 8; i++) {
+        if (s.sgpa[i] >= 0 && s.sgpa[i] <= 10) {
+            total += s.sgpa[i];
+            count++;
+        }
+    }
+
+    if (count == 0) {
+        return -1;
+    }
+
+    return total / count;
+}
+
+/* Display CGPA of a selected student */
+void displayCGPA() {
+    long long id;
+
+    printf("Enter SAP ID: ");
+    if (scanf("%lld", &id) != 1) {
+        printf("Invalid SAP ID.\n");
+        return;
+    }
+
+    int index = findStudent(id);
+
+    if (index == -1) {
+        printf("Student not found.\n");
+        return;
+    }
+
+    float cgpa = calculateCGPA(students[index]);
+
+    if (cgpa < 0) {
+        printf("No SGPA values available.\n");
+    } else {
+        printf("Student: %s\n", students[index].name);
+        printf("CGPA: %.2f\n", cgpa);
+    }
+}
+
+/* Calculate average CGPA for each year */
+void averageCGPAByYear() {
+    for (int year = 1; year <= 4; year++) {
+        float total = 0;
+        int count = 0;
+
+        for (int i = 0; i < studentCount; i++) {
+            if (students[i].year == year) {
+                float cgpa = calculateCGPA(students[i]);
+
+                if (cgpa >= 0) {
+                    total += cgpa;
+                    count++;
+                }
+            }
+        }
+
+        if (count > 0) {
+            printf("Year %d Average CGPA: %.2f\n",
+                   year, total / count);
+        } else {
+            printf("Year %d: No CGPA data available.\n",
+                   year);
+        }
+    }
+}
+
+/* Sort students by increasing SAP ID */
+void sortBySAPID() {
+    struct Student temp;
+
+    for (int i = 0; i < studentCount - 1; i++) {
+        for (int j = 0; j < studentCount - i - 1; j++) {
+            if (students[j].sapID > students[j + 1].sapID) {
+                temp = students[j];
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("\nStudents sorted by SAP ID:\n");
+    displayAllStudents();
+}
+
+/* Sort students alphabetically by name */
+void sortByName() {
+    struct Student temp;
+
+    for (int i = 0; i < studentCount - 1; i++) {
+        for (int j = 0; j < studentCount - i - 1; j++) {
+            if (strcmp(students[j].name,
+                       students[j + 1].name) > 0) {
+                temp = students[j];
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("\nStudents sorted by Name:\n");
+    displayAllStudents();
+}
+
 /* Main menu */
 void displayMenu() {
     printf("\n====================================\n");
@@ -213,36 +323,50 @@ int main() {
             return 1;
         }
 
-        switch (choice) {
-            case 1:
-                addStudent();
-                break;
+       switch (choice) {
+    case 1:
+        addStudent();
+        break;
 
-            case 2:
-                searchStudent();
-                break;
+    case 2:
+        searchStudent();
+        break;
 
-            case 5:
-                displayAllStudents();
-                break;
+    case 3:
+        displayCGPA();
+        break;
 
-            case 6:
-                deleteStudent();
-                break;
+    case 4:
+        averageCGPAByYear();
+        break;
 
-            case 0:
-                printf("Thank you! Goodbye.\n");
-                break;
+    case 5:
+        displayAllStudents();
+        break;
 
-            case 3: case 4:
-            case 7: case 8: case 9:
-                printf("Feature coming soon!\n");
-                break;
+    case 6:
+        deleteStudent();
+        break;
 
-            default:
-                printf("Invalid choice. Try again.\n");
-        }
+    case 7:
+        sortBySAPID();
+        break;
 
+    case 8:
+        sortByName();
+        break;
+
+    case 9:
+        printf("AI Advisor coming soon!\n");
+        break;
+
+    case 0:
+        printf("Thank you! Goodbye.\n");
+        break;
+
+    default:
+        printf("Invalid choice. Try again.\n");
+}
     } while (choice != 0);
 
     return 0;
